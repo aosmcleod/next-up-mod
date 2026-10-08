@@ -1,0 +1,20 @@
+{
+  "name": "next-up-mod",
+  "owner": {
+    "name": "Alec McLeod",
+    "url": "https://github.com/aosmcleod"
+  },
+  "metadata": {
+    "description": "Next Up for Claude Code: a backlog of Claude's follow-ups across sessions, and a task list for the session in hand"
+  },
+  "plugins": [
+    {
+      "name": "next-up",
+      "source": "./",
+      "description": "Keeps the follow-ups Claude suggests in one backlog shared by every session, and a checklist Claude keeps for multi-step work in each session, each with a footer button and a pane",
+      "version": "1.0.0",
+      "license": "MIT",
+      "homepage": "https://github.com/aosmcleod/next-up-mod#readme"
+    }
+  ]
+}

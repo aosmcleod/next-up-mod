@@ -1,0 +1,38 @@
+{
+  "name": "next-up",
+  "version": "1.0.0",
+  "description": "Keeps the follow-ups Claude suggests in one backlog shared by every session, and a checklist Claude keeps for multi-step work in each session, each with a footer button and a pane",
+  "author": {
+    "name": "Alec McLeod",
+    "url": "https://github.com/aosmcleod"
+  },
+  "homepage": "https://github.com/aosmcleod/next-up-mod#readme",
+  "repository": "https://github.com/aosmcleod/next-up-mod",
+  "license": "MIT",
+  "keywords": [
+    "backlog",
+    "tasks",
+    "todo",
+    "checklist",
+    "follow-up",
+    "sessions",
+    "productivity"
+  ],
+  "documentationUrl": "https://github.com/aosmcleod/next-up-mod#readme",
+  "supportUrl": "https://github.com/aosmcleod/next-up-mod/issues",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "backlog": {
+      "type": "boolean",
+      "title": "Next Up backlog",
+      "description": "Collect Claude's suggested follow-ups into one backlog across sessions, with the Next Up footer button and pane.",
+      "default": true
+    },
+    "tasks": {
+      "type": "boolean",
+      "title": "Session tasks",
+      "description": "Have Claude keep a task list for multi-step work in each session, with the Tasks footer button and pane.",
+      "default": true
+    }
+  }
+}
