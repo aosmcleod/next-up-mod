@@ -12,6 +12,17 @@ checklist for multi-step work in the session you are in, which you can watch and
 [![Claude Code 2.1.287+](https://img.shields.io/badge/Claude%20Code-2.1.287%2B-d97757)](#install)
 [![macOS · Windows](https://img.shields.io/badge/desktop-macOS%20%C2%B7%20Windows-lightgrey)](#known-limits)
 
+<table>
+<tr>
+<td align="center"><b>Next Up</b></td>
+<td align="center"><b>Tasks</b></td>
+</tr>
+<tr>
+<td><img src="docs/img/next-up.png" width="440" alt="The Next Up pane beside a Claude Code session, listing backlog tasks for a project with Suggested, Added and Plan labels"></td>
+<td><img src="docs/img/tasks.png" width="440" alt="The Tasks pane beside the same session, with two steps still to do"></td>
+</tr>
+</table>
+
 </div>
 
 ---
@@ -46,7 +57,9 @@ claude plugin install next-up@next-up-mod
 ```
 
 Then start a new session, or run `/reload-plugins` in an open one. Two buttons appear in the
-footer below the prompt: **Tasks ↗** and **Next Up ↗**.
+footer below the prompt, each with its count: **Tasks ↗** and **Next Up ↗**.
+
+<img src="docs/img/footer.png" width="600" alt="The Claude Code prompt box with '2 Tasks' and '5 Next Up' buttons in the footer below it">
 
 ### Turning a part off
 
