@@ -64,9 +64,15 @@ footer below the prompt, each with its count: **Tasks ↗** and **Next Up ↗**.
 ### Turning a part off
 
 Both parts are on by default. Switch either off in `/config` (**Next Up backlog**,
-**Session tasks**), or with `/plugin configure next-up@next-up-mod`. A change applies from the
-next session or `/reload-plugins`. With a part off, its button, pane, tools and guidance are
-all gone; with both off, the mod does nothing.
+**Session tasks**), with `/plugin configure next-up@next-up-mod`, or from a shell:
+
+```bash
+echo '{"tasks": "false"}' | claude plugin configure next-up@next-up-mod --values-stdin
+```
+
+Use `"backlog"` for Next Up, and `"true"` to switch a part back on. Restart Claude Code to
+apply a change. With a part off, its button, pane, tools and guidance are all gone; with both
+off, the mod does nothing.
 
 ---
 
