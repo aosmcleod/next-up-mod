@@ -75,7 +75,7 @@ off, the mod does nothing.
 
 | Source | Label | How |
 |---|---|---|
-| Claude's suggestion chips | **Suggested** (purple) | A copy is kept whenever Claude offers a background task; the chip still shows as usual |
+| Claude's suggestion chips | **Suggested** (purple) | Whenever Claude offers a background task, it goes to the backlog instead; no chip shows in the chat |
 | Claude, on its own or when you ask | **Added** (blue) | Claude is told about the backlog and given an `add_tasks` tool |
 | `/next plan <goal>` | **Plan 2/5** (amber) | Claude breaks the goal into ordered steps and files each one, without starting the work |
 

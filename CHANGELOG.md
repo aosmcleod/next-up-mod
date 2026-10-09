@@ -3,6 +3,14 @@
 All notable changes to Next Up are recorded here. It follows
 [semantic versioning](https://semver.org/).
 
+## 1.0.1 — 2026-10-09
+
+### Fixed
+
+- Claude's suggestion chips no longer show in the chat. Next Up answers the suggestion itself
+  and files it in the backlog; a suggestion it cannot keep (no title or prompt), or one it
+  fails to save, still shows as a chip so it is not lost.
+
 ## 1.0.0 — 2026-10-08
 
 The first public release.

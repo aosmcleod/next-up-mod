@@ -1,6 +1,6 @@
 {
   "name": "next-up",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Keeps the follow-ups Claude suggests in one backlog shared by every session, and a checklist Claude keeps for multi-step work in each session, each with a footer button and a pane",
   "author": {
     "name": "Alec McLeod",

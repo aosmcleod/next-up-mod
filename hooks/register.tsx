@@ -701,12 +701,17 @@ export const register: Register = (on, options) => {
     )
   })
 
-  // Claude's suggestion chips: keep a copy, and let the chip show as usual.
+  // Claude's suggestion chips: answered here, so the task lands in the backlog
+  // and no chip shows. One Next Up cannot keep (no title or prompt), or a
+  // failed save, goes on to the chip so the suggestion is not lost.
   if (features.backlog) on('tool.call', { tool: /spawn_task$/ }, async ($, e, next) => {
     const task = taskFromChip(e as unknown as Record<string, unknown>, context.project, stamp())
-    if (task) await addIncoming($, [task])
+    if (!task) return next(e)
+    const { added } = await addIncoming($, [task])
+    const how = added.length > 0 ? 'Saved' : 'Already in'
+    const where = context.project?.name ?? 'no project'
 
-    return next(e)
+    return { result: `${how} the user's Next Up backlog (${where}) as "${task.title}". No suggestion chip was shown, so there is no task_id and nothing to dismiss.` }
   }).catch(($, e, next) => next(e))
 
   if (features.backlog) on('tool.call', { tool: /^mcp__next-up__add_tasks$/ }, async ($, e) => {
