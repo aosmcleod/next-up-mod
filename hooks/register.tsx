@@ -10,7 +10,7 @@ import { ageOf, eventForIncoming, fold, labelOf, submittedTask } from './store'
 import type { TaskEvent } from './store'
 import { appendEvents, logsSignature, readEvents } from './store-io'
 import type { Files, LogCache } from './store-io'
-import { bandTasks, cap, detailCap, footerLabel, labelColour, paneView, AMBER } from './view'
+import { bandTasks, cap, detailCap, footerLabel, labelColour, paneView, sessionCardText, AMBER } from './view'
 
 // Next Up's hooks, for its two features (each can be switched off in /config):
 //
@@ -301,6 +301,8 @@ type CardModel = {
   favourite?: boolean
   // A finished task: the title struck through.
   struck?: boolean
+  // The title wraps rather than being cut to one line.
+  wrapsTitle?: boolean
   // Top right, in order: the kind or Done in colour, or an age (dim).
   topRight: Array<{ text: string; colour?: string }>
   // Bottom right in a pane: the age, where the top right holds a label.
@@ -348,10 +350,10 @@ function card(els: Elements['desktop'], m: CardModel, o: CardOptions) {
       borderColor={CLEAR}
       hover={o.still ? undefined : { backgroundColor: HOVER, borderColor: HOVER }}
     >
-      <Box flexDirection="row" justifyContent="space-between" alignItems="center" gap={2}>
+      <Box flexDirection="row" justifyContent="space-between" alignItems={m.wrapsTitle ? 'flex-start' : 'center'} gap={2}>
         <Box flexDirection="row" flexShrink={1} minWidth={0}>
           {m.favourite ? <Text color={AMBER} bold hover={fade}>★ </Text> : null}
-          <Text wrap="truncate-end" strikethrough={m.struck} dimColor={m.struck} hover={fade}>{m.title}</Text>
+          <Text wrap={m.wrapsTitle ? 'wrap' : 'truncate-end'} strikethrough={m.struck} dimColor={m.struck} hover={fade}>{m.title}</Text>
         </Box>
         <Box flexDirection="row" flexShrink={0} gap={2}>
           {m.topRight.map(part =>
@@ -430,11 +432,14 @@ function sessionCard($: EngineInterface, els: Elements['desktop'], task: Session
   const { Button } = els
   const key = `tasks-${task.id}`
   const isDone = task.status === 'done'
+  // The title wraps over the lines a backlog card gives its title and description.
+  const text = sessionCardText(task.title, task.detail, columns)
   const model: CardModel = {
     key,
-    title: task.title,
-    detail: task.detail,
+    title: text.title,
+    detail: text.detail,
     struck: isDone,
+    wrapsTitle: true,
     topRight: [isDone ? { text: 'Done', colour: GREEN } : { text: 'To do', colour: AMBER }],
     // When it was finished, or when it was planned.
     bottomRight: ageOf(isDone ? (task.doneAt ?? task.createdAt) : task.createdAt, Date.now()),
@@ -601,7 +606,10 @@ export const register: Register = (on, options) => {
   // The footer: two native Buttons, "<n> Tasks ↗" and "<n> Next Up ↗".
   // Desktop forces mod buttons there to its own look and one line
   // (anthropics/claude-code#100116).
-  on('ui.render', { component: 'SessionMode' }, async ($, e) => {
+  // What comes after this hook (another mod's footer, the engine's mode
+  // labels) is kept, to the right of these buttons.
+  on('ui.render', { component: 'SessionMode' }, async ($, e, next) => {
+    const rest = await next(e)
     const { Box, Button } = $.ui.resolve(e)
     const tasks = features.tasks ? tasksLabel((await read($, sessionAtom)) ?? []) : null
     const backlog = features.backlog ? footerLabel((await read($, tasksAtom)) ?? [], (await read($, projectAtom)) ?? null) : null
@@ -610,6 +618,7 @@ export const register: Register = (on, options) => {
       <Box key="next-up-footer" flexDirection="row" alignItems="center" gap={1}>
         {tasks ? <Button key="next-up-tasks-open" label={tasks} hover={{ color: AMBER }} onPress={() => press($, togglePane($, TASKS_PANE, 'Tasks'))} /> : null}
         {backlog ? <Button key="next-up-open" label={backlog} hover={{ color: AMBER }} onPress={() => press($, togglePane($))} /> : null}
+        {rest}
       </Box>
     )
   })

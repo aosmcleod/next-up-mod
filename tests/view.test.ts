@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'claude-code/testing'
 
 import type { Task } from '../types'
-import { bandTasks, footerLabel, labelColour, paneView, AMBER, BLUE, PURPLE } from '../hooks/view'
+import { bandTasks, footerLabel, labelColour, paneView, sessionCardText, AMBER, BLUE, PURPLE } from '../hooks/view'
 
 const STOREFRONT = { root: 'C:/dev/acme-storefront', name: 'acme-storefront' }
 const BILLING = { root: 'C:/dev/billing-api', name: 'billing-api' }
@@ -20,9 +20,9 @@ function task(over: Partial<Task> = {}): Task {
 describe('footer', () => {
   test('counts open tasks in the project, or every open task outside one', () => {
     const list = [task(), task(), task({ repo: BILLING }), task({ status: 'done' })]
-    expect(footerLabel(list, STOREFRONT)).toBe('2 \u00a0Next Up ↗')
-    expect(footerLabel(list, null)).toBe('3 \u00a0Next Up ↗')
-    expect(footerLabel([], STOREFRONT)).toBe('Next Up ↗')
+    expect(footerLabel(list, STOREFRONT)).toBe('◇ 2')
+    expect(footerLabel(list, null)).toBe('◇ 3')
+    expect(footerLabel([], STOREFRONT)).toBe('◇ 0')
   })
 })
 
@@ -69,5 +69,34 @@ describe('band and labels', () => {
     expect(labelColour(task({ kind: 'plan' }))).toBe(AMBER)
     expect(labelColour(task({ kind: 'added' }))).toBe(BLUE)
     expect(labelColour(task({ kind: 'suggested' }))).toBe(PURPLE)
+  })
+})
+
+describe('sessionCardText', () => {
+  // 36 columns: (36 - 6) * 1.3 = 39 characters a line.
+  const COLUMNS = 36
+
+  test('a short title leaves three lines of description', () => {
+    const text = sessionCardText('Fix it', 'd'.repeat(500), COLUMNS)
+    expect(text.title).toBe('Fix it')
+    expect(text.detail.length).toBe(39 * 3)
+  })
+
+  test('a title over two lines leaves the description two', () => {
+    const title = 't'.repeat(60)
+    const text = sessionCardText(title, 'd'.repeat(500), COLUMNS)
+    expect(text.title).toBe(title)
+    expect(text.detail.length).toBe(39 * 2)
+  })
+
+  test('a title filling all four lines is cut there and drops the description', () => {
+    const text = sessionCardText('t'.repeat(400), 'detail', COLUMNS)
+    expect(text.title.length).toBe(39 * 4)
+    expect(text.title.endsWith('…')).toBe(true)
+    expect(text.detail).toBe('')
+  })
+
+  test('no description stays empty', () => {
+    expect(sessionCardText('Fix it', '', COLUMNS).detail).toBe('')
   })
 })

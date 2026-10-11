@@ -81,8 +81,8 @@ test('the reminder lists what is left in order, or is null', () => {
 
 describe('the footer and pane', () => {
   test('the footer counts what is left', () => {
-    expect(tasksLabel([])).toBe('Tasks ↗')
-    expect(tasksLabel(applyChanges(planned(), { done: ['s1'] }, T1).tasks)).toBe('2 \u00a0Tasks ↗')
+    expect(tasksLabel([])).toBe('≡ 0')
+    expect(tasksLabel(applyChanges(planned(), { done: ['s1'] }, T1).tasks)).toBe('≡ 2')
   })
 
   test('to do keeps planned order; done is newest first', () => {

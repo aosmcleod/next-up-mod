@@ -3,7 +3,6 @@
 // pane. No `$`; the hooks module keeps the list in state.
 
 import type { SessionTask, TasksTab } from '../types'
-import { GAP } from './view'
 
 export type { SessionTask, TasksTab } from '../types'
 
@@ -105,11 +104,12 @@ export function openReminder(tasks: SessionTask[]): string | null {
   ].join('\n')
 }
 
-// The footer button: "<to do>  Tasks ↗", or just the name with none.
-export function tasksLabel(tasks: SessionTask[]): string {
-  const count = tasks.filter(t => t.status === 'todo').length
+// The footer button: "≡ <to do>". A symbol, not a word: the desktop app gives
+// every mod's footer buttons one short width between them (#100116).
+export const TASKS_MARK = '≡'
 
-  return count > 0 ? `${count}${GAP}Tasks ↗` : 'Tasks ↗'
+export function tasksLabel(tasks: SessionTask[]): string {
+  return `${TASKS_MARK} ${tasks.filter(t => t.status === 'todo').length}`
 }
 
 // The Tasks pane: To Do in planned order, Done newest first.

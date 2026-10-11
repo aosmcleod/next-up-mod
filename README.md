@@ -50,7 +50,9 @@ claude plugin install next-up@next-up-mod
 ```
 
 Then start a new session, or run `/reload-plugins` in an open one. Two buttons appear in the
-footer below the prompt, each with its count: **Tasks ↗** and **Next Up ↗**.
+footer below the prompt, each a symbol and a count: **≡** for Tasks (steps left this session)
+and **◇** for Next Up (open tasks for this project). The desktop app gives every mod's footer
+buttons one short width between them, so they carry no words.
 
 ![The Claude Code prompt box with '2 Tasks' and '5 Next Up' buttons in the footer below it](docs/img/footer.png)
 
@@ -96,7 +98,7 @@ project, the task is marked done.
 
 ### Where to see them
 
-- **The footer button** shows how many tasks are open for the session's project, and opens or
+- **The footer button** (**◇**) shows how many tasks are open for the session's project, and opens or
   closes the pane.
 - **The pane** has three tabs: **★** favourites, **this project**, and **All** (grouped by
   project).
@@ -112,10 +114,11 @@ done as it finishes, and adds, rewords or removes steps as the work changes. Bef
 turn it checks the list: if steps remain and nothing blocks them, it carries on; otherwise it
 says which remain and why. Questions and one-step changes get no list.
 
-- **The footer button** shows how many steps are left, and opens or closes the Tasks pane.
+- **The footer button** (**≡**) shows how many steps are left, and opens or closes the Tasks pane.
 - **The pane** has two tabs, **To Do** in Claude's planned order and **Done** with the newest
   first. To Do cards are labelled **To do** with when they were planned; done ones are struck
-  through and labelled **Done** with when they were finished.
+  through and labelled **Done** with when they were finished. A long title wraps over up to
+  four lines, the description taking whatever is left.
 - **Your edits:** hover a To Do card to mark it **✓ Done** or remove it. Claude is told what
   you changed with your next message, and treats it as decided.
 
@@ -172,7 +175,8 @@ ask: *"add that to Next Up"*, *"what's in Next Up for this repo?"*), and
   message, so a list shown at session start would vanish as soon as it appeared.
 - **Colours are tuned for dark themes.** The card hover and tray use fixed dark colours.
 - **Footer buttons look like the app's, not like Next Up's.** The desktop app draws every mod
-  button in the footer in its own one-line style.
+  button in the footer in its own one-line style. Other mods' footer buttons sit beside Next
+  Up's.
 - **Backlog logs are never compacted.** A log only grows while its session adds or changes
   tasks, and only logs that changed are read again, so this stays small in practice.
 
