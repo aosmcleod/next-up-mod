@@ -81,10 +81,29 @@ export function labelColour(task: Task): string {
   return task.kind === 'added' ? BLUE : PURPLE
 }
 
-// About three lines of description: the site's width in cells times three,
-// plus a third for the desktop's proportional font fitting more per cell.
+// About one line of text: the site's width in cells, plus a third for the
+// desktop's proportional font fitting more per cell.
+function lineCap(columns: number): number {
+  return Math.max(20, Math.floor((columns - 6) * 1.3))
+}
+
+// About three lines of description.
 export function detailCap(columns: number): number {
-  return Math.max(60, Math.floor((columns - 6) * 3 * 1.3))
+  return Math.max(60, lineCap(columns) * 3)
+}
+
+// The lines a backlog card gives its text: one of title, three of description.
+const CARD_LINES = 4
+
+// A session task's title and description within a backlog card's four lines:
+// the title wraps over as many as it needs, and the description has the rest
+// (none once the title fills them).
+export function sessionCardText(title: string, detail: string, columns: number): { title: string; detail: string } {
+  const perLine = lineCap(columns)
+  const shown = cap(title, perLine * CARD_LINES)
+  const left = CARD_LINES - Math.max(1, Math.ceil(shown.length / perLine))
+
+  return { title: shown, detail: left > 0 && detail ? cap(detail, perLine * left) : '' }
 }
 
 export function cap(text: string, max: number): string {

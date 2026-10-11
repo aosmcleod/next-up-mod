@@ -3,6 +3,18 @@
 All notable changes to Next Up are recorded here. It follows
 [semantic versioning](https://semver.org/).
 
+## 1.0.2 — 2026-10-10
+
+### Fixed
+
+- Next Up's footer buttons no longer hide what other mods draw in the footer (Runbranch's
+  Run, Open and Stop, say) or the app's own mode labels. They now sit beside them.
+
+### Changed
+
+- A Tasks card's title wraps instead of being cut to one line. It takes the four lines a
+  Next Up card gives its title and description; the description has whatever lines are left.
+
 ## 1.0.1 — 2026-10-09
 
 ### Fixed

@@ -115,7 +115,8 @@ says which remain and why. Questions and one-step changes get no list.
 - **The footer button** shows how many steps are left, and opens or closes the Tasks pane.
 - **The pane** has two tabs, **To Do** in Claude's planned order and **Done** with the newest
   first. To Do cards are labelled **To do** with when they were planned; done ones are struck
-  through and labelled **Done** with when they were finished.
+  through and labelled **Done** with when they were finished. A long title wraps over up to
+  four lines, the description taking whatever is left.
 - **Your edits:** hover a To Do card to mark it **✓ Done** or remove it. Claude is told what
   you changed with your next message, and treats it as decided.
 
@@ -172,7 +173,8 @@ ask: *"add that to Next Up"*, *"what's in Next Up for this repo?"*), and
   message, so a list shown at session start would vanish as soon as it appeared.
 - **Colours are tuned for dark themes.** The card hover and tray use fixed dark colours.
 - **Footer buttons look like the app's, not like Next Up's.** The desktop app draws every mod
-  button in the footer in its own one-line style.
+  button in the footer in its own one-line style. Other mods' footer buttons sit beside Next
+  Up's.
 - **Backlog logs are never compacted.** A log only grows while its session adds or changes
   tasks, and only logs that changed are read again, so this stays small in practice.
 
