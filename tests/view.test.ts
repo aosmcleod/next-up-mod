@@ -20,9 +20,9 @@ function task(over: Partial<Task> = {}): Task {
 describe('footer', () => {
   test('counts open tasks in the project, or every open task outside one', () => {
     const list = [task(), task(), task({ repo: BILLING }), task({ status: 'done' })]
-    expect(footerLabel(list, STOREFRONT)).toBe('2 \u00a0Next Up ↗')
-    expect(footerLabel(list, null)).toBe('3 \u00a0Next Up ↗')
-    expect(footerLabel([], STOREFRONT)).toBe('Next Up ↗')
+    expect(footerLabel(list, STOREFRONT)).toBe('◇ 2')
+    expect(footerLabel(list, null)).toBe('◇ 3')
+    expect(footerLabel([], STOREFRONT)).toBe('◇ 0')
   })
 })
 

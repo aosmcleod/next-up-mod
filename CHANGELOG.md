@@ -12,6 +12,9 @@ All notable changes to Next Up are recorded here. It follows
 
 ### Changed
 
+- The footer buttons are a symbol and a count, **≡ 3** for Tasks and **◇ 5** for Next Up, in
+  place of "3 Tasks ↗" and "5 Next Up ↗". The desktop app gives every mod's footer buttons
+  one short width between them, and the words left no room for another mod's.
 - A Tasks card's title wraps instead of being cut to one line. It takes the four lines a
   Next Up card gives its title and description; the description has whatever lines are left.
 

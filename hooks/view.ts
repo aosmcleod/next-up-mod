@@ -2,10 +2,6 @@
 
 import type { Project, Tab, Task } from '../types'
 
-// Between the count and the name: a space and a no-break space, since the
-// desktop draws labels as web text and folds two plain spaces into one.
-export const GAP = ' \u00a0'
-
 export const AMBER = '#d48a1a'
 export const BLUE = '#6ea8e0'
 export const PURPLE = '#b392f0'
@@ -20,11 +16,12 @@ export function ordered(tasks: Task[]): Task[] {
   return [...tasks].sort((a, b) => Number(b.favourite) - Number(a.favourite) || b.createdAt.localeCompare(a.createdAt))
 }
 
-// The footer button: "<open here>  Next Up ↗", or just the name with none.
-export function footerLabel(tasks: Task[], project: Project): string {
-  const count = openFor(tasks, project).length
+// The footer button: "◇ <open here>". A symbol, not a word: the desktop app
+// gives every mod's footer buttons one short width between them (#100116).
+export const NEXT_UP_MARK = '◇'
 
-  return count > 0 ? `${count}${GAP}Next Up ↗` : 'Next Up ↗'
+export function footerLabel(tasks: Task[], project: Project): string {
+  return `${NEXT_UP_MARK} ${openFor(tasks, project).length}`
 }
 
 export type PaneView = {
