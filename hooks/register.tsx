@@ -76,14 +76,11 @@ const NUDGE_TASKS = [
 // when the module loads, so a change applies from the next session or reload.
 const features = { backlog: true, tasks: true }
 
-// The guidance for the features switched on, narrowed to the tools a request
-// offers when that is known (a subagent may be given fewer).
-function nudgeText(tools?: readonly string[]): string {
-  const offers = (name: string) => !tools || tools.includes(TOOL(name))
-  const backlog = features.backlog && offers('add_tasks') ? NUDGE_BACKLOG : ''
-  const tasks = features.tasks && offers('update_session_tasks') ? NUDGE_TASKS : ''
-
-  return [backlog, tasks].filter(Boolean).join('\n\n')
+// The guidance for the features switched on.
+function nudgeText(): string {
+  return [features.backlog ? NUDGE_BACKLOG : '', features.tasks ? NUDGE_TASKS : '']
+    .filter(Boolean)
+    .join('\n\n')
 }
 
 const tasksAtom = atom({ plugin: 'next-up', key: 'tasks' } as const, [] as Task[])
@@ -97,11 +94,12 @@ const tasksTabAtom = atom({ plugin: 'next-up', key: 'tasksTab' } as const, 'todo
 // with the next prompt, then cleared.
 const edits: UserEdits = { done: [], removed: [] }
 
-// Whether Claude has been told about Next Up this session: through the system
-// prompt where the engine composes it after Next Up starts (the terminal), or
-// else beside the first prompt sent (desktop, where no mod runs until the
-// first message and the system prompt is already built).
-const nudge = { composed: false, sent: false }
+// Whether Claude has been told about Next Up this session. The guidance goes
+// beside the first prompt sent, not into the system prompt: no mod runs on the
+// desktop until the first message, by which time the system prompt is built,
+// and a security plugin seated above this one keeps prompt content out of
+// reach of the mods a person installs in a Team or Enterprise organisation.
+const nudge = { sent: false }
 
 // Repeat presses of the same button on the same task within this window are one.
 const REPEAT_MS = 1000
@@ -572,7 +570,6 @@ export const register: Register = (on, options) => {
     context.session = await $.session.id()
     context.dir = await dataDir($)
     context.cwd = e.cwd
-    nudge.composed = false
     nudge.sent = false
     // The tools and command first: the nudge tells Claude about them, so they
     // must exist even if what follows fails.
@@ -774,23 +771,19 @@ export const register: Register = (on, options) => {
   }).catch(() => ({ result: 'Next Up could not update the session task list.' }))
 
   // In the terminal Claude Code nudges Claude toward its own task tools; with
-  // Next Up's list in use, that would make two lists.
-  if (features.tasks) on('prompt.attachment', async ($, e, next) => {
-    if (e.type === 'todo_reminder' || e.type === 'task_reminder') return { text: null }
+  // Next Up's list in use, that would make two lists. The matcher names the two
+  // reminders, so the hook is dispatched for those alone and not for every
+  // attachment the engine injects.
+  if (features.tasks) on('prompt.attachment', { type: ['todo_reminder', 'task_reminder'] }, async () =>
+    ({ text: null })).catch(($, e, next) => next(e))
 
-    return next(e)
-  }).catch(($, e, next) => next(e))
+  // A compaction drops the first prompt's context, and the nudge with it, so
+  // Claude is told again beside the next prompt. A precompute installs nothing.
+  on('session.compact', { trigger: ['manual', 'auto', 'plugin'] }, async ($, e, next) => {
+    const compacted = await next(e)
+    if (!('skip' in compacted)) nudge.sent = false
 
-  // The nudge, appended after the engine's own sections.
-  on('prompt.compose', async ($, e, next) => {
-    const composed = await next(e)
-    // Already given beside the first prompt: not twice.
-    if (nudge.sent) return composed
-    const text = nudgeText(e.tools)
-    if (!text) return composed
-    nudge.composed = true
-
-    return { sections: [...composed.sections, { id: 'next-up', text, scope: 'session' as const }] }
+    return compacted
   }).catch(($, e, next) => next(e))
 
   // The first prompt takes the session-start list down. Sending a task's
@@ -808,11 +801,11 @@ export const register: Register = (on, options) => {
         $.ui.toast(`Next Up: "${sent.title}" started`)
       }
     }
-    // Unseen by the user, beside this prompt: Next Up's guidance, if the system
-    // prompt never carried it, and their edits in the Tasks pane.
+    // Unseen by the user, beside this prompt: Next Up's guidance, if Claude has
+    // not had it yet this session, and their edits in the Tasks pane.
     // Both are marked delivered only once the prompt has gone through.
     const extra: string[] = []
-    const sendsNudge = !nudge.composed && !nudge.sent
+    const sendsNudge = !nudge.sent
     if (sendsNudge) extra.push(`From the Next Up mod the user has installed:\n\n${nudgeText()}`)
     const pending = { done: [...edits.done], removed: [...edits.removed] }
     if (features.tasks) {

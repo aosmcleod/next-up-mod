@@ -3,6 +3,20 @@
 All notable changes to Next Up are recorded here. It follows
 [semantic versioning](https://semver.org/).
 
+## 1.0.3 — 2026-10-22
+
+### Fixed
+
+- Claude Code no longer reports Next Up's hooks as skipped on every prompt. In a Team or
+  Enterprise organisation the bundled `cc-plugin-sec-default` plugin is seated above the mods
+  a person installs and keeps prompt content out of their reach, so Next Up's `prompt.compose`
+  and `prompt.attachment` hooks never ran and each prompt carried a line saying so.
+  - Next Up no longer hooks `prompt.compose`. Its guidance for Claude goes beside the first
+    prompt of the session, which is what the desktop app has always done, and is given again
+    after a compaction so it is not lost with the summarised conversation.
+  - The hook that suppresses Claude Code's own task reminders now names the two reminders in
+    its matcher, so it is dispatched for those alone instead of for every attachment.
+
 ## 1.0.2 — 2026-10-10
 
 ### Fixed
